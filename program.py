@@ -86,8 +86,8 @@ class Program:
         Program._botaoParar.configurarInterrupcao(Pin.IRQ_RISING, None)
         Program._ledParar.ligar()
         #Implementar PARADA de rotação do motor
-        sleep(1)
         print(f"parando de girar o motor")
+        sleep(10)
         Program._ledGirar.desligar()
         Program._ledParar.desligar()
         #Implementar leitura da quantidade de ração
