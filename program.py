@@ -1,7 +1,7 @@
 from led import Led
 from botao import Botao
 #from servo import Servo
-#from sensor_us import SensorUltrassom
+from sensor_ultrassom import SensorUltrassom
 from time import sleep
 from machine import Pin
 
@@ -23,7 +23,8 @@ class Program:
     _ledPoucaRacao = Led(10)
     
     #Implementar sensor
-    
+    _sensorUltrassom = SensorUltrassom(19, 18)
+
     #Implementar servo
     
     
@@ -38,7 +39,7 @@ class Program:
     
     @staticmethod
     def despejar1Porcao(pin):
-        Program._botao1Porcao.configurarInterrupcao(Pin.IRQ_RISING, None)
+        Program.disableAllIrq()
         Program._led1Porcao.ligar()
         #Implementar rotação do motor
         print(f"girando motor p/ 1 porcao")   #
@@ -46,11 +47,12 @@ class Program:
         print(f"parando de girar o motor")    #
         Program._led1Porcao.desligar()
         #Implementar leitura da quantidade de ração
-        Program._botao1Porcao.configurarInterrupcao(Pin.IRQ_RISING, Program.despejar1Porcao)
+        Program.medirQuantidadeRacao()
+        Program.enableAllIrq()
         
     @staticmethod
     def despejar2Porcao(pin):
-        Program._botao2Porcao.configurarInterrupcao(Pin.IRQ_RISING, None)
+        Program.disableAllIrq()
         Program._led2Porcao.ligar()
         #Implementar rotação do motor
         print(f"girando motor p/ 2 porcoes")  #
@@ -58,11 +60,12 @@ class Program:
         print(f"parando de girar o motor")    #
         Program._led2Porcao.desligar()
         #Implementar leitura da quantidade de ração
-        Program._botao2Porcao.configurarInterrupcao(Pin.IRQ_RISING, Program.despejar2Porcao)
+        Program.medirQuantidadeRacao()
+        Program.enableAllIrq()
         
     @staticmethod
     def despejar3Porcao(pin):
-        Program._botao3Porcao.configurarInterrupcao(Pin.IRQ_RISING, None)
+        Program.disableAllIrq()
         Program._led3Porcao.ligar()
         #Implementar rotação do motor
         print(f"girando motor p/ 3 porcoes")  #
@@ -70,20 +73,21 @@ class Program:
         print(f"parando de girar o motor")    #
         Program._led3Porcao.desligar()
         #Implementar leitura da quantidade de ração
-        Program._botao3Porcao.configurarInterrupcao(Pin.IRQ_RISING, Program.despejar3Porcao)
+        Program.medirQuantidadeRacao()
+        Program.enableAllIrq()
     
     @staticmethod
     def despejarIndefinido(pin):
-        Program._botaoGirar.configurarInterrupcao(Pin.IRQ_RISING, None)
+        Program.disableAllIrq()
+        Program.enableStopIrq()
         Program._ledGirar.ligar()
         #Implementar rotação do motor
         print(f"girando motor ate pedir p/ parar")   # ELIMINAR
         sleep(2)
-        Program._botaoGirar.configurarInterrupcao(Pin.IRQ_RISING, Program.despejarIndefinido)
     
     @staticmethod    
     def pararDespejo(pin):
-        Program._botaoParar.configurarInterrupcao(Pin.IRQ_RISING, None)
+        Program.disableAllIrq()
         Program._ledParar.ligar()
         #Implementar PARADA de rotação do motor
         print(f"parando de girar o motor")
@@ -91,7 +95,8 @@ class Program:
         Program._ledGirar.desligar()
         Program._ledParar.desligar()
         #Implementar leitura da quantidade de ração
-        Program._botaoParar.configurarInterrupcao(Pin.IRQ_RISING, Program.pararDespejo)
+        Program.medirQuantidadeRacao()
+        Program.enableAllIrq()
     
     @staticmethod
     def run():
@@ -100,5 +105,30 @@ class Program:
         Program._botao2Porcao.configurarInterrupcao(Pin.IRQ_RISING, Program.despejar2Porcao)
         Program._botao3Porcao.configurarInterrupcao(Pin.IRQ_RISING, Program.despejar3Porcao)
         Program._botaoGirar.configurarInterrupcao(Pin.IRQ_RISING, Program.despejarIndefinido)
-        Program._botaoParar.configurarInterrupcao(Pin.IRQ_RISING, Program.pararDespejo)
 
+    @staticmethod
+    def disableAllIrq():
+        Program._botao1Porcao.configurarInterrupcao(Pin.IRQ_RISING, None)
+        Program._botao2Porcao.configurarInterrupcao(Pin.IRQ_RISING, None)
+        Program._botao3Porcao.configurarInterrupcao(Pin.IRQ_RISING, None)
+        Program._botaoGirar.configurarInterrupcao(Pin.IRQ_RISING, None)
+        Program._botaoParar.configurarInterrupcao(Pin.IRQ_RISING, None)
+
+    @staticmethod
+    def enableAllIrq():
+        Program._botao1Porcao.configurarInterrupcao(Pin.IRQ_RISING, Program.despejar1Porcao)
+        Program._botao2Porcao.configurarInterrupcao(Pin.IRQ_RISING, Program.despejar2Porcao)
+        Program._botao3Porcao.configurarInterrupcao(Pin.IRQ_RISING, Program.despejar3Porcao)
+        Program._botaoGirar.configurarInterrupcao(Pin.IRQ_RISING, Program.despejarIndefinido)
+    
+
+    @staticmethod
+    def medirQuantidadeRacao():
+        distanciaRacao = Program._sensorUltrassom.medirDistancia()
+        print("distancia: ", distanciaRacao)
+        if (distanciaRacao > 20):
+            Program._ledPoucaRacao.ligar()
+
+    @staticmethod
+    def enableStopIrq():
+        Program._botaoParar.configurarInterrupcao(Pin.IRQ_RISING, Program.pararDespejo)
