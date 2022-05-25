@@ -9,7 +9,7 @@ class Motor:
         self._pwm.duty_u16(0)
         
     def girar180(self):
-        for pos in range(1000, 5000, 50):
+        for pos in range(2800, 5000, 50):
             self._pwm.duty_u16(pos)
             sleep(0.01)
     

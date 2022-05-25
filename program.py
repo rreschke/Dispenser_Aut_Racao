@@ -43,7 +43,7 @@ class Program:
         Program._led1Porcao.ligar()
         #Implementar rotação do motor
         print(f"girando motor p/ 1 porcao")
-        Program._motor.girar180()                          
+        Program._motor.girar90()                          
         print(f"parando de girar o motor")
         Program._led1Porcao.desligar()
         #Implementar leitura da quantidade de ração
@@ -56,8 +56,8 @@ class Program:
         Program._led2Porcao.ligar()
         #Implementar rotação do motor
         print(f"girando motor p/ 2 porcoes")  #
-        Program._motor.girar180()
-        Program._motor.girar180()
+        Program._motor.girar90()
+        Program._motor.girar90()
         print(f"parando de girar o motor")    #
         Program._led2Porcao.desligar()
         #Implementar leitura da quantidade de ração
@@ -70,9 +70,9 @@ class Program:
         Program._led3Porcao.ligar()
         #Implementar rotação do motor
         print(f"girando motor p/ 3 porcoes")  #
-        Program._motor.girar180()
-        Program._motor.girar180()
-        Program._motor.girar180()  
+        Program._motor.girar90()
+        Program._motor.girar90()
+        Program._motor.girar90()  
         print(f"parando de girar o motor")    #
         Program._led3Porcao.desligar()
         #Implementar leitura da quantidade de ração
@@ -94,6 +94,7 @@ class Program:
         Program._motor.parar() 
         print(f"parando de girar o motor")
         Program._ledGirar.desligar()
+        sleep(2)
         Program._ledParar.desligar()
         Program.medirQuantidadeRacao()
         Program.enableAllIrq()
