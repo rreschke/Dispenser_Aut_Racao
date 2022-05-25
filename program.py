@@ -1,6 +1,6 @@
 from led import Led
 from botao import Botao
-#from servo import Servo
+from motor import Motor
 from sensor_ultrassom import SensorUltrassom
 from time import sleep
 from machine import Pin
@@ -26,7 +26,7 @@ class Program:
     _sensorUltrassom = SensorUltrassom(19, 18)
 
     #Implementar servo
-    
+    _motor = Motor(4)
     
     @staticmethod
     def iniciar():
@@ -42,9 +42,9 @@ class Program:
         Program.disableAllIrq()
         Program._led1Porcao.ligar()
         #Implementar rotação do motor
-        print(f"girando motor p/ 1 porcao")   #
-        sleep(2)                              # ELIMINAR
-        print(f"parando de girar o motor")    #
+        print(f"girando motor p/ 1 porcao")
+        Program._motor.girar180()                          
+        print(f"parando de girar o motor")
         Program._led1Porcao.desligar()
         #Implementar leitura da quantidade de ração
         Program.medirQuantidadeRacao()
@@ -56,7 +56,8 @@ class Program:
         Program._led2Porcao.ligar()
         #Implementar rotação do motor
         print(f"girando motor p/ 2 porcoes")  #
-        sleep(2)                              # ELIMINAR
+        Program._motor.girar180()
+        Program._motor.girar180()
         print(f"parando de girar o motor")    #
         Program._led2Porcao.desligar()
         #Implementar leitura da quantidade de ração
@@ -69,7 +70,9 @@ class Program:
         Program._led3Porcao.ligar()
         #Implementar rotação do motor
         print(f"girando motor p/ 3 porcoes")  #
-        sleep(2)                              # ELIMINAR
+        Program._motor.girar180()
+        Program._motor.girar180()
+        Program._motor.girar180()  
         print(f"parando de girar o motor")    #
         Program._led3Porcao.desligar()
         #Implementar leitura da quantidade de ração
@@ -81,20 +84,17 @@ class Program:
         Program.disableAllIrq()
         Program.enableStopIrq()
         Program._ledGirar.ligar()
-        #Implementar rotação do motor
-        print(f"girando motor ate pedir p/ parar")   # ELIMINAR
-        sleep(2)
+        Program._motor.girar() 
+        print(f"girando motor ate pedir p/ parar")
     
     @staticmethod    
     def pararDespejo(pin):
         Program.disableAllIrq()
         Program._ledParar.ligar()
-        #Implementar PARADA de rotação do motor
+        Program._motor.parar() 
         print(f"parando de girar o motor")
-        sleep(10)
         Program._ledGirar.desligar()
         Program._ledParar.desligar()
-        #Implementar leitura da quantidade de ração
         Program.medirQuantidadeRacao()
         Program.enableAllIrq()
     
@@ -128,6 +128,8 @@ class Program:
         print("distancia: ", distanciaRacao)
         if (distanciaRacao > 20):
             Program._ledPoucaRacao.ligar()
+        else:
+            Program._ledPoucaRacao.desligar()
 
     @staticmethod
     def enableStopIrq():
