@@ -4,6 +4,7 @@ from motor import Motor
 from sensor_ultrassom import SensorUltrassom
 from time import sleep
 from machine import Pin
+import utime
 
 #Ref Interrupcao: https://www.youtube.com/watch?v=Qw2xr5a2rSA
 class Program:
@@ -29,6 +30,10 @@ class Program:
     _motor = Motor(4)
     
     @staticmethod
+    def debounce():
+        utime.sleep_us(200)
+        
+    @staticmethod
     def iniciar():
         Program._led1Porcao.desligar()
         Program._led2Porcao.desligar()
@@ -40,63 +45,74 @@ class Program:
     @staticmethod
     def despejar1Porcao(pin):
         Program.disableAllIrq()
-        Program._led1Porcao.ligar()
-        #Implementar rotação do motor
-        print(f"girando motor p/ 1 porcao")
-        Program._motor.girar90()                          
-        print(f"parando de girar o motor")
-        Program._led1Porcao.desligar()
-        #Implementar leitura da quantidade de ração
-        Program.medirQuantidadeRacao()
+        Program.debounce()
+        print("Entrou aqui")
+        if Program._botao1Porcao.estaPressionado() == True:
+            Program._led1Porcao.ligar()
+            #Implementar rotação do motor
+            print(f"girando motor p/ 1 porcao")
+            Program._motor.girar90()                          
+            print(f"parando de girar o motor")
+            Program._led1Porcao.desligar()
+            #Implementar leitura da quantidade de ração
+            Program.medirQuantidadeRacao()
         Program.enableAllIrq()
         
     @staticmethod
     def despejar2Porcao(pin):
         Program.disableAllIrq()
-        Program._led2Porcao.ligar()
-        #Implementar rotação do motor
-        print(f"girando motor p/ 2 porcoes")  #
-        Program._motor.girar90()
-        Program._motor.girar90()
-        print(f"parando de girar o motor")    #
-        Program._led2Porcao.desligar()
-        #Implementar leitura da quantidade de ração
-        Program.medirQuantidadeRacao()
+        Program.debounce()
+        if Program._botao2Porcao.estaPressionado() == True:
+            Program._led2Porcao.ligar()
+            #Implementar rotação do motor
+            print(f"girando motor p/ 2 porcoes")  #
+            Program._motor.girar90()
+            Program._motor.girar90()
+            print(f"parando de girar o motor")    #
+            Program._led2Porcao.desligar()
+            #Implementar leitura da quantidade de ração
+            Program.medirQuantidadeRacao()
         Program.enableAllIrq()
         
     @staticmethod
     def despejar3Porcao(pin):
         Program.disableAllIrq()
-        Program._led3Porcao.ligar()
-        #Implementar rotação do motor
-        print(f"girando motor p/ 3 porcoes")  #
-        Program._motor.girar90()
-        Program._motor.girar90()
-        Program._motor.girar90()  
-        print(f"parando de girar o motor")    #
-        Program._led3Porcao.desligar()
-        #Implementar leitura da quantidade de ração
-        Program.medirQuantidadeRacao()
+        Program.debounce()
+        if Program._botao3Porcao.estaPressionado() == True:
+            Program._led3Porcao.ligar()
+            #Implementar rotação do motor
+            print(f"girando motor p/ 3 porcoes")  #
+            Program._motor.girar90()
+            Program._motor.girar90()
+            Program._motor.girar90()  
+            print(f"parando de girar o motor")    #
+            Program._led3Porcao.desligar()
+            #Implementar leitura da quantidade de ração
+            Program.medirQuantidadeRacao()
         Program.enableAllIrq()
     
     @staticmethod
     def despejarIndefinido(pin):
         Program.disableAllIrq()
-        Program.enableStopIrq()
-        Program._ledGirar.ligar()
-        Program._motor.girar() 
-        print(f"girando motor ate pedir p/ parar")
+        Program.debounce()
+        if Program._botaoGirar.estaPressionado() == True:
+            Program.enableStopIrq()
+            Program._ledGirar.ligar()
+            Program._motor.girar() 
+            print(f"girando motor ate pedir p/ parar")
     
     @staticmethod    
     def pararDespejo(pin):
         Program.disableAllIrq()
-        Program._ledParar.ligar()
-        Program._motor.parar() 
-        print(f"parando de girar o motor")
-        Program._ledGirar.desligar()
-        sleep(2)
-        Program._ledParar.desligar()
-        Program.medirQuantidadeRacao()
+        Program.debounce()
+        if Program._botaoParar.estaPressionado() == True:
+            Program._ledParar.ligar()
+            Program._motor.parar() 
+            print(f"parando de girar o motor")
+            Program._ledGirar.desligar()
+            sleep(2)
+            Program._ledParar.desligar()
+            Program.medirQuantidadeRacao()
         Program.enableAllIrq()
     
     @staticmethod
