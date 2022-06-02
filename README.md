@@ -6,3 +6,5 @@ Projeto criado como avaliação para matéria EEN251 - Microcontroladores e Sist
 - Felipe Freitas Villani 19.01370-0
 - Marcello Beer 17.00865-4
 - Renan Scheidt Reschke 19.02009-0
+
+Vídeo do funcionamento: https://youtu.be/P8z2N7H4SaY
